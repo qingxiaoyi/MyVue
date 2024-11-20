@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var obj = {
+            name:'hello',
+            age: 18,
+            hobbies:['football','music','game']
+        }
+
+        function property(obj,key,value){
+            Object.defineProperty(obj,key,{
+                set(newValue){
+                    console.log('set赋值了');
+                    value = newValue;
+                },
+                get(){
+                    console.log('get获取了');
+                    return value;
+                },
+            });
+        }
+
+        function proxyProperty(obj,key,value){
+            new Proxy(obj,{
+                set:function(obj,key,value){
+                    console.log('set赋值了');
+                   obj[key] = value;
+                },
+                get:function(obj,key){
+                    console.log('get获取了');
+                    return obj[key];
+                },
+            })
+        }
+
+        // property(obj,'hobbies',obj['hobbies']);
+        proxyProperty(obj,'hobbies',obj['hobbies']);
+
+        obj.hobbies.push('movie')
+        obj.hobbies[1] = 'washing'
+
+        // let arr = [1,2,3]
+        // obj.hobbies = arr
+
+        console.log(obj.hobbies);
+        console.log(obj.age);
+        // obj.hobbies.push('watch movie')
+    </script>
+</body>
+</html>

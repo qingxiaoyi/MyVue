@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=sc, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--我们可以给模板中的属性 增加一个收集器 dep-->
+    <!--页面渲染的时候 我们将渲染逻辑封装到watcher中  vm. update(vm. render());-->
+    <!--让dep记住这个watcher即可， 稍后属性变化了可以找到对应的dep中存放的watcher进行重新渲染 -->
+    <!-- 观察者模式  -->
+
+    <div id="app" class="app" style="background-color: yellow;font-size: 28px;">
+        <div style="color: red;">
+            <p style="font-size: 26px;">hello:{{name}}，你今年{{age}}岁，</p>
+        </div>
+        <span>{{age}}</span>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            // template:'<div><p>hello</p><span style="background-color:yellow;">{{age}}</span></div>',
+            data(){
+                return {
+                    name: 'qxy',
+                    age: 20,
+                    adress:{
+                        city: 'beijing',
+                        local: 'chengdu'
+                    },
+                    hobbies:['basketball', 'football']
+                }
+            },
+        })
+
+        // setTimeout(()=>{
+        //     vm.name = 'qjm';
+        //     vm.age = 11;
+        //     // vm._update(vm._render())// 手动去调用更新
+
+        // },2000)
+        /**
+         * 期望：数据变化后自动更新
+         * 1.使用观察者模式实现依赖收集
+         * 2.
+         */
+
+
+    </script>
+</body>
+</html>

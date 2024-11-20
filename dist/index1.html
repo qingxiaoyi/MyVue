@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=sc, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="./vue.js"></script>
+    <script>
+        console.log('Hello Vue.js', Vue)
+        // 响应式的数据变化，数据变化了我可以监控到数据的变化
+        // 数据的取值和更改值
+
+        const vm = new Vue({
+            el: '#app',
+            data(){
+                return {
+                    name: 'qxy',
+                    age: 20,
+                    adress:{
+                        city: 'beijing',
+                        local: 'chengdu'
+                    },
+                    hobbies:['basketball', 'football']
+                }
+            },
+            // data:{
+            //     name: 'qxy',
+            //     age: 20,
+            // }
+        })
+
+        vm.name = 'qxy2'
+        console.log(vm)
+    </script>
+</body>
+</html>
