@@ -66,7 +66,7 @@ export function initLifecycle(Vue) {
         return createTextNode(this,...arguments)
     }
     Vue.prototype._s = function(value){
-        if(typeof value == 'object') return value
+        if(typeof value !== 'object') return value
         return JSON.stringify(value)
     }
 
@@ -80,7 +80,6 @@ export function mountComponent(vm,el) {
         vm._update(vm._render());
     }
     const watcher = new Watcher(vm,updateComponent,true);// true标识是一个渲染watcher
-    console.log('watcher',watcher);
 
     // 2.根据虚拟dom生成真实dom
 

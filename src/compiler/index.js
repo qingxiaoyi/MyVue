@@ -66,13 +66,13 @@ export function compileToFunction(template){
     //1.就是将template 转化成ast语法树
 
     let ast = parseHTML(template); // 解析html模板
-    console.log('ast',ast);
+    // console.log('ast',ast);
 
     //2.生成render方法(render方法返回的结果就是 虚拟D0M)
     // codegen(ast); // 生成render方法
     let code = codegen(ast);
 
-    console.log(code,'code');
+    // console.log(code,'code');
     // 模板引擎的实现原理就是with + new Function
     let render = new Function(`with(this){return ${code}}`);
 

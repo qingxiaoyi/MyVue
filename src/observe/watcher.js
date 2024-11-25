@@ -4,24 +4,46 @@ import Dep, { popStack, pushStack } from "./dep";
 let id = 0;
 
 class Watcher{// 不同的的组件有不同的watcher
-    constructor(vm,fn,options){
+    constructor(vm,exprOrFn,options,cb){
         this.id = id++;
 
         this.renderWatcher = options;// 标识是一个渲染watcher
-        this.getter = fn;// getter会发生取值操作
+       
+        if(typeof exprOrFn === 'string'){
+            this.getter = function(){
+                return vm[exprOrFn];
+            }
+        }else{
+            this.getter = exprOrFn;// getter会发生取值操作
+        }
 
         this.deps = [];
         this.depsId = new Set();
 
-        this.get();
+        this.lazy = options.lazy;
+        this.dirty = this.lazy;// 缓存值
+        this.vm = vm;
+
+        this.cb = cb;
+        this.user = options.user;// 标识是否是用户watcher
+
+        this.value = this.lazy ? undefined : this.get();
     }
 
     get(){
         // Dep.target = this;// 静态属性，只有一份
         pushStack(this);
-        this.getter();// 会去vm上取值，vm._update(vm._render())
+        let value = this.getter.call(this.vm);// 会去vm上取值，vm._update(vm._render())
         // Dep.target = null;// 渲染完毕后就清空
         popStack();
+        return value;
+    }
+
+    depend(){
+        let i = this.deps.length;
+        while(i--){
+            this.deps[i].depend();
+        }
     }
 
     addDep(dep){
@@ -33,13 +55,28 @@ class Watcher{// 不同的的组件有不同的watcher
         }
     }
 
+    evaluate(){
+        this.value = this.get();// 获取到用户的返回值，并且标识为脏
+        this.dirty = false;
+    }
+
     update(){// 执行更新
         // this.get();// 重新渲染
-        queueWatcher(this);// 把当前的watcher保存起来
+        if(this.lazy){
+            // 如果是计算属性，依赖的值变化了，就标识计算属性更新了
+            this.dirty = true
+        }else{
+            queueWatcher(this);// 把当前的watcher保存起来
+        }
     }
 
     run(){
-        this.get();// 真正执行渲染
+        let oldValue = this.value;// 计算之前的值，为老值
+        // 重新执行get获取的值为新值
+        let newValue = this.get();// 真正执行渲染
+        if(this.user){
+            this.cb.call(this.vm,oldValue,newValue);// 如果是watch，执行回调
+        }
     }
 }
 
